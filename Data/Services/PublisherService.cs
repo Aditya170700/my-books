@@ -26,7 +26,20 @@ namespace MyBooks.Data.Services
 
         public List<Publisher> GetPublishers() => _dbContext.Publishers.ToList();
 
-        public Publisher GetPublisherById(int Id) => _dbContext.Publishers.FirstOrDefault(b => b.Id == Id);
+        public PublisherBookAuthorsViews GetPublisherById(int Id)
+        {
+            var _publisher = _dbContext.Publishers.Where(p => p.Id == Id)
+                .Select(p => new PublisherBookAuthorsViews() {
+                    Name = p.Name,
+                    BookAuthors = p.Books.Select(b => new BookAuthorsView() {
+                        Title = b.Title,
+                        BookAuthors = b.BookAuthors.Select(ba => ba.Author.FullName).ToList()
+                    }).ToList(),
+                })
+                .FirstOrDefault();
+
+            return _publisher;
+        }
 
         public Publisher UpdatePublisher(int Id, PublisherViews pvm)
         {
