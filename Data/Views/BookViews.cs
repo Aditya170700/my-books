@@ -13,5 +13,18 @@ namespace MyBooks.Data.Views
         public int PublisherId { get; set; }
         public List<int> AuthorIds { get; set; }
     }
+
+    public class BookPublisherAuthorsViews
+    {
+        public string Title { get; set; }
+        public string description { get; set; }
+        public bool IsRead { get; set; }
+        public DateTime? ReadAt { get; set; }
+        public int Rate { get; set; }
+        public string Genre { get; set; }
+        public string CoverUrl { get; set; }
+        public string PublisherName { get; set; }
+        public List<string> AuthorNames { get; set; }
+    }
 }
 

@@ -6,12 +6,12 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MyBooks.Data.Services
 {
-	public class BookService
-	{
+    public class BookService
+    {
         private readonly AppDbContext _dbContext;
 
         public BookService(AppDbContext dbContext)
-		{
+        {
             _dbContext = dbContext;
         }
 
@@ -48,7 +48,25 @@ namespace MyBooks.Data.Services
 
         public List<Book> GetBooks() => _dbContext.Books.ToList();
 
-        public Book GetBookById(int Id) => _dbContext.Books.FirstOrDefault(b => b.Id == Id);
+        public BookPublisherAuthorsViews GetBookById(int Id)
+        {
+            var _book = _dbContext.Books.Where(b => b.Id == Id)
+                .Select(book => new BookPublisherAuthorsViews()
+                {
+                    Title = book.Title,
+                    description = book.description,
+                    IsRead = book.IsRead,
+                    ReadAt = book.IsRead ? book.ReadAt.Value : null,
+                    Rate = book.IsRead ? book.Rate : 0,
+                    Genre = book.Genre,
+                    CoverUrl = book.CoverUrl,
+                    PublisherName = book.Publisher.Name,
+                    AuthorNames = book.BookAuthors.Select(ba => ba.Author.FullName).ToList(),
+                })
+                .FirstOrDefault();
+
+            return _book;
+        }
 
         public Book UpdateBook(int Id, BookViews bvm)
         {
