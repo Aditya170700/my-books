@@ -4,7 +4,7 @@ using MyBooks.Data.Views;
 
 namespace MyBooks.Data.Services
 {
-	public class AuthorService
+    public class AuthorService
     {
         private readonly AppDbContext _dbContext;
 
@@ -26,7 +26,18 @@ namespace MyBooks.Data.Services
 
         public List<Author> GetAuthors() => _dbContext.Authors.ToList();
 
-        public Author GetAuthorById(int Id) => _dbContext.Authors.FirstOrDefault(b => b.Id == Id);
+        public AuthorBooksViews GetAuthorById(int Id)
+        {
+            var _author = _dbContext.Authors.Where(a => a.Id == Id)
+                .Select(a => new AuthorBooksViews()
+                {
+                    FullName = a.FullName,
+                    BookTitles = a.BookAuthors.Select(ba => ba.Book.Title).ToList()
+                })
+                .FirstOrDefault();
+
+            return _author;
+        }
 
         public Author UpdateAuthor(int Id, AuthorViews avm)
         {
