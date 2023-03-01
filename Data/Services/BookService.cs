@@ -58,6 +58,17 @@ namespace MyBooks.Data.Services
 
             return _book;
         }
+
+        public void DeleteBook(int Id)
+        {
+            var _book = _dbContext.Books.FirstOrDefault(b => b.Id == Id);
+
+            if (_book != null)
+            {
+                _dbContext.Books.Remove(_book);
+                _dbContext.SaveChanges();
+            }
+        }
     }
 }
 
