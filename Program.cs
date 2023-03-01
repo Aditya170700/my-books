@@ -1,11 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using MyBooks.Data;
+using MyBooks.Data.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add db context
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Add services
+builder.Services.AddTransient<BookService>();
 
 // Add controllers
 builder.Services.AddControllers();
