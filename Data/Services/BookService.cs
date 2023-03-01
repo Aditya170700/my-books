@@ -24,14 +24,26 @@ namespace MyBooks.Data.Services
                 IsRead = bvm.IsRead,
                 ReadAt = bvm.IsRead ? bvm.ReadAt.Value : null,
                 Rate = bvm.IsRead ? bvm.Rate : 0,
-                Author = bvm.Author,
                 Genre = bvm.Genre,
                 CoverUrl = bvm.CoverUrl,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.Now,
+                PublisherId = bvm.PublisherId,
             };
 
             _dbContext.Add(_book);
             _dbContext.SaveChanges();
+
+            foreach (var id in bvm.AuthorIds)
+            {
+                var _bookAuthor = new BookAuthor()
+                {
+                    BookId = _book.Id,
+                    AuthorId = id,
+                };
+
+                _dbContext.BookAuthors.Add(_bookAuthor);
+                _dbContext.SaveChanges();
+            }
         }
 
         public List<Book> GetBooks() => _dbContext.Books.ToList();
@@ -49,7 +61,6 @@ namespace MyBooks.Data.Services
                 _book.IsRead = bvm.IsRead;
                 _book.ReadAt = bvm.IsRead ? bvm.ReadAt.Value : null;
                 _book.Rate = bvm.IsRead ? bvm.Rate : 0;
-                _book.Author = bvm.Author;
                 _book.Genre = bvm.Genre;
                 _book.CoverUrl = bvm.CoverUrl;
 

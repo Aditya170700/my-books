@@ -10,7 +10,6 @@ namespace MyBooks.Data.Models
 		public DateTime? ReadAt { get; set; }
 		public int Rate { get; set; }
 		public string Genre { get; set; }
-		public string Author { get; set; }
         public string CoverUrl { get; set; }
 		public DateTime CreatedAt { get; set; }
 
