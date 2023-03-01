@@ -24,6 +24,18 @@ namespace MyBooks.Controllers
             _bookService.AddBook(bvm);
             return Ok();
         }
+
+        [HttpGet]
+        public IActionResult GetBooks()
+        {
+            return Ok(_bookService.GetBooks());
+        }
+
+        [HttpGet("{Id}")]
+        public IActionResult GetBook(int Id)
+        {
+            return Ok(_bookService.GetBookById(Id));
+        }
     }
 }
 
