@@ -13,6 +13,11 @@ namespace MyBooks.Data.Models
 		public string Author { get; set; }
         public string CoverUrl { get; set; }
 		public DateTime CreatedAt { get; set; }
-	}
+
+		// Relationship
+		public int PublisherId { get; set; }
+		public Publisher Publisher { get; set; }
+        public List<BookAuthor> BookAuthors { get; set; }
+    }
 }
 
