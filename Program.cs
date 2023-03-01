@@ -10,6 +10,8 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(buil
 
 // Add services
 builder.Services.AddTransient<BookService>();
+builder.Services.AddTransient<AuthorService>();
+builder.Services.AddTransient<PublisherService>();
 
 // Add controllers
 builder.Services.AddControllers();
@@ -27,7 +29,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 
     // Db seeder
-    AppDbInitializer.Seed(app);
+    // AppDbInitializer.Seed(app);
 }
 
 app.UseHttpsRedirection();
