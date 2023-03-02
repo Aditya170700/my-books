@@ -28,9 +28,12 @@ namespace MyBooks.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAuthors()
+        public IActionResult GetAuthors(
+            [FromQuery] string field,
+            [FromQuery] string sort
+        )
         {
-            return Ok(_authorService.GetAuthors());
+            return Ok(_authorService.GetAuthors(field, sort));
         }
 
         [HttpGet("{Id}")]

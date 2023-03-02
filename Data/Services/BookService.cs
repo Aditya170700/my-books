@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using MyBooks.Data.Models;
+using MyBooks.Data.Queries;
 using MyBooks.Data.Views;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -58,7 +59,17 @@ namespace MyBooks.Data.Services
             }
         }
 
-        public List<Book> GetBooks() => _dbContext.Books.ToList();
+        public List<Book> GetBooks(string field, string sort)
+        {
+            IQueryable<Book> query = _dbContext.Books;
+
+            if (!string.IsNullOrEmpty(field) && !string.IsNullOrEmpty(sort))
+            {
+                query = query.OrderByProperty(field, sort.ToLower() == "desc");
+            }
+
+            return query.ToList();
+        }
 
         public BookPublisherAuthorsViews GetBookById(int Id)
         {

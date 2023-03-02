@@ -26,9 +26,12 @@ namespace MyBooks.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetBooks()
+        public IActionResult GetBooks(
+            [FromQuery] string field,
+            [FromQuery] string sort
+        )
         {
-            return Ok(_bookService.GetBooks());
+            return Ok(_bookService.GetBooks(field, sort));
         }
 
         [HttpGet("{Id}")]

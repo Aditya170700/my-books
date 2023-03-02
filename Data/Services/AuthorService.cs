@@ -1,5 +1,6 @@
 ﻿using System;
 using MyBooks.Data.Models;
+using MyBooks.Data.Queries;
 using MyBooks.Data.Views;
 
 namespace MyBooks.Data.Services
@@ -24,7 +25,17 @@ namespace MyBooks.Data.Services
             _dbContext.SaveChanges();
         }
 
-        public List<Author> GetAuthors() => _dbContext.Authors.ToList();
+        public List<Author> GetAuthors(string field, string sort)
+        {
+            IQueryable<Author> query = _dbContext.Authors;
+
+            if (!string.IsNullOrEmpty(field) && !string.IsNullOrEmpty(sort))
+            {
+                query = query.OrderByProperty(field, sort.ToLower() == "desc");
+            }
+
+            return query.ToList();
+        }
 
         public AuthorBooksViews GetAuthorById(int Id)
         {

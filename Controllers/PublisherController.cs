@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using MyBooks.Data.Services;
 using MyBooks.Data.Views;
@@ -28,9 +29,12 @@ namespace MyBooks.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetPublishers()
+        public IActionResult GetPublishers(
+            [FromQuery] string field,
+            [FromQuery] string sort
+        )
         {
-            return Ok(_publisherService.GetPublishers());
+            return Ok(_publisherService.GetPublishers(field, sort));
         }
 
         [HttpGet("{Id}")]

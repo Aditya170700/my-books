@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq.Expressions;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using MyBooks.Data.Models;
 
@@ -27,7 +29,7 @@ namespace MyBooks.Data
 				.HasForeignKey(ba => ba.AuthorId);
 		}
 
-		public DbSet<Book> Books { get; set; }
+        public DbSet<Book> Books { get; set; }
 		public DbSet<Author> Authors { get; set; }
 		public DbSet<BookAuthor> BookAuthors { get; set; }
 		public DbSet<Publisher> Publishers { get; set; }

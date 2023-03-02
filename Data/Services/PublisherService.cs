@@ -1,5 +1,8 @@
 ﻿using System;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using MyBooks.Data.Models;
+using MyBooks.Data.Queries;
 using MyBooks.Data.Views;
 
 namespace MyBooks.Data.Services
@@ -26,7 +29,17 @@ namespace MyBooks.Data.Services
             return _publisher;
         }
 
-        public List<Publisher> GetPublishers() => _dbContext.Publishers.ToList();
+        public List<Publisher> GetPublishers(string field, string sort)
+        {
+            IQueryable<Publisher> query = _dbContext.Publishers;
+
+            if (!string.IsNullOrEmpty(field) && !string.IsNullOrEmpty(sort))
+            {
+                query = query.OrderByProperty(field, sort.ToLower() == "desc");
+            }
+
+            return query.ToList();
+        }
 
         public PublisherBookAuthorsViews GetPublisherById(int Id)
         {

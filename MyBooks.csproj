@@ -25,11 +25,13 @@
     <None Remove="Data\Models\" />
     <None Remove="Data\Views\" />
     <None Remove="Exceptions\" />
+    <None Remove="Data\Queries\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Data\Models\" />
     <Folder Include="Data\Views\" />
     <Folder Include="Exceptions\" />
+    <Folder Include="Data\Queries\" />
   </ItemGroup>
 </Project>
