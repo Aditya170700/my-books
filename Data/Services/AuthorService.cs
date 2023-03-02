@@ -36,6 +36,11 @@ namespace MyBooks.Data.Services
                 })
                 .FirstOrDefault();
 
+            if (_author == null)
+            {
+                throw new Exception($"Author with id : {Id} does not exists");
+            }
+
             return _author;
         }
 
@@ -43,12 +48,14 @@ namespace MyBooks.Data.Services
         {
             var _author = _dbContext.Authors.FirstOrDefault(b => b.Id == Id);
 
-            if (_author != null)
+            if (_author == null)
             {
-                _author.FullName = avm.FullName;
-
-                _dbContext.SaveChanges();
+                throw new Exception($"Author with id : {Id} does not exists");
             }
+
+            _author.FullName = avm.FullName;
+
+            _dbContext.SaveChanges();
 
             return _author;
         }
@@ -57,11 +64,13 @@ namespace MyBooks.Data.Services
         {
             var _author = _dbContext.Authors.FirstOrDefault(b => b.Id == Id);
 
-            if (_author != null)
+            if (_author == null)
             {
-                _dbContext.Authors.Remove(_author);
-                _dbContext.SaveChanges();
+                throw new Exception($"Author with id : {Id} does not exists");
             }
+
+            _dbContext.Authors.Remove(_author);
+            _dbContext.SaveChanges();
         }
     }
 }

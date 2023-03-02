@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using MyBooks.Data.Services;
 using MyBooks.Data.Views;
 
@@ -23,8 +24,7 @@ namespace MyBooks.Controllers
         [HttpPost]
         public IActionResult AddPublisher([FromBody] PublisherViews pvm)
         {
-            _publisherService.AddPublisher(pvm);
-            return Ok();
+            return Created(nameof(AddPublisher), _publisherService.AddPublisher(pvm));
         }
 
         [HttpGet]
@@ -36,7 +36,9 @@ namespace MyBooks.Controllers
         [HttpGet("{Id}")]
         public IActionResult GetPublisher(int Id)
         {
-            return Ok(_publisherService.GetPublisherById(Id));
+            var _publisher = _publisherService.GetPublisherById(Id);
+
+            return Ok(_publisher);
         }
 
         [HttpPut("{Id}")]

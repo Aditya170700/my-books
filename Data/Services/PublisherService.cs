@@ -13,7 +13,7 @@ namespace MyBooks.Data.Services
             _dbContext = dbContext;
         }
 
-        public void AddPublisher(PublisherViews pvm)
+        public Publisher AddPublisher(PublisherViews pvm)
         {
             var _publisher = new Publisher()
             {
@@ -22,6 +22,8 @@ namespace MyBooks.Data.Services
 
             _dbContext.Add(_publisher);
             _dbContext.SaveChanges();
+
+            return _publisher;
         }
 
         public List<Publisher> GetPublishers() => _dbContext.Publishers.ToList();
@@ -38,6 +40,11 @@ namespace MyBooks.Data.Services
                 })
                 .FirstOrDefault();
 
+            if (_publisher == null)
+            {
+                throw new Exception($"Publisher with id : {Id} does not exists");
+            }
+
             return _publisher;
         }
 
@@ -45,12 +52,13 @@ namespace MyBooks.Data.Services
         {
             var _publisher = _dbContext.Publishers.FirstOrDefault(b => b.Id == Id);
 
-            if (_publisher != null)
+            if (_publisher == null)
             {
-                _publisher.Name = pvm.Name;
-
-                _dbContext.SaveChanges();
+                throw new Exception($"Publisher with id : {Id} does not exists");
             }
+
+            _publisher.Name = pvm.Name;
+            _dbContext.SaveChanges();
 
             return _publisher;
         }
@@ -59,11 +67,13 @@ namespace MyBooks.Data.Services
         {
             var _publisher = _dbContext.Publishers.FirstOrDefault(b => b.Id == Id);
 
-            if (_publisher != null)
+            if (_publisher == null)
             {
-                _dbContext.Publishers.Remove(_publisher);
-                _dbContext.SaveChanges();
+                throw new Exception($"Publisher with id : {Id} does not exists");
             }
+
+            _dbContext.Publishers.Remove(_publisher);
+            _dbContext.SaveChanges();
         }
     }
 }

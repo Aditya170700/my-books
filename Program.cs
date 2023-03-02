@@ -2,6 +2,7 @@
 using Microsoft.OpenApi.Models;
 using MyBooks.Data;
 using MyBooks.Data.Services;
+using MyBooks.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,9 @@ if (app.Environment.IsDevelopment())
     // Db seeder
     // AppDbInitializer.Seed(app);
 }
+
+// Exception middleware
+app.ConfigureBuildInExceptionHandler();
 
 app.UseHttpsRedirection();
 

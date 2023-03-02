@@ -17,32 +17,44 @@ namespace MyBooks.Data.Services
 
         public void AddBook(BookViews bvm)
         {
-            var _book = new Book()
+            var _transaction = _dbContext.Database.BeginTransaction();
+            try
             {
-                Title = bvm.Title,
-                description = bvm.description,
-                IsRead = bvm.IsRead,
-                ReadAt = bvm.IsRead ? bvm.ReadAt.Value : null,
-                Rate = bvm.IsRead ? bvm.Rate : 0,
-                Genre = bvm.Genre,
-                CoverUrl = bvm.CoverUrl,
-                CreatedAt = DateTime.Now,
-                PublisherId = bvm.PublisherId,
-            };
-
-            _dbContext.Add(_book);
-            _dbContext.SaveChanges();
-
-            foreach (var id in bvm.AuthorIds)
-            {
-                var _bookAuthor = new BookAuthor()
+                var _book = new Book()
                 {
-                    BookId = _book.Id,
-                    AuthorId = id,
+                    Title = bvm.Title,
+                    description = bvm.description,
+                    IsRead = bvm.IsRead,
+                    ReadAt = bvm.IsRead ? bvm.ReadAt.Value : null,
+                    Rate = bvm.IsRead ? bvm.Rate : 0,
+                    Genre = bvm.Genre,
+                    CoverUrl = bvm.CoverUrl,
+                    CreatedAt = DateTime.Now,
+                    PublisherId = bvm.PublisherId,
                 };
 
-                _dbContext.BookAuthors.Add(_bookAuthor);
+                _dbContext.Add(_book);
                 _dbContext.SaveChanges();
+
+                var _bookAuthors = new List<BookAuthor>();
+
+                foreach (var id in bvm.AuthorIds)
+                {
+                    _dbContext.Add(new BookAuthor()
+                    {
+                        BookId = _book.Id,
+                        AuthorId = id,
+                    });
+                }
+
+                _dbContext.SaveChanges();
+
+                _transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                _transaction.Rollback();
+                throw new Exception(ex.Message);
             }
         }
 
@@ -65,6 +77,11 @@ namespace MyBooks.Data.Services
                 })
                 .FirstOrDefault();
 
+            if (_book == null)
+            {
+                throw new Exception($"Buuk with id : {Id} does not exists");
+            }
+
             return _book;
         }
 
@@ -72,18 +89,20 @@ namespace MyBooks.Data.Services
         {
             var _book = _dbContext.Books.FirstOrDefault(b => b.Id == Id);
 
-            if (_book != null)
+            if (_book == null)
             {
-                _book.Title = bvm.Title;
-                _book.description = bvm.description;
-                _book.IsRead = bvm.IsRead;
-                _book.ReadAt = bvm.IsRead ? bvm.ReadAt.Value : null;
-                _book.Rate = bvm.IsRead ? bvm.Rate : 0;
-                _book.Genre = bvm.Genre;
-                _book.CoverUrl = bvm.CoverUrl;
-
-                _dbContext.SaveChanges();
+                throw new Exception($"Buuk with id : {Id} does not exists");
             }
+
+            _book.Title = bvm.Title;
+            _book.description = bvm.description;
+            _book.IsRead = bvm.IsRead;
+            _book.ReadAt = bvm.IsRead ? bvm.ReadAt.Value : null;
+            _book.Rate = bvm.IsRead ? bvm.Rate : 0;
+            _book.Genre = bvm.Genre;
+            _book.CoverUrl = bvm.CoverUrl;
+
+            _dbContext.SaveChanges();
 
             return _book;
         }
@@ -92,11 +111,13 @@ namespace MyBooks.Data.Services
         {
             var _book = _dbContext.Books.FirstOrDefault(b => b.Id == Id);
 
-            if (_book != null)
+            if (_book == null)
             {
-                _dbContext.Books.Remove(_book);
-                _dbContext.SaveChanges();
+                throw new Exception($"Buuk with id : {Id} does not exists");
             }
+
+            _dbContext.Books.Remove(_book);
+            _dbContext.SaveChanges();
         }
     }
 }
