@@ -25,13 +25,21 @@ namespace MyBooks.Data.Services
             _dbContext.SaveChanges();
         }
 
-        public List<Author> GetAuthors(string field, string sort)
+        public List<Author> GetAuthors(string field, string sort, string search)
         {
             IQueryable<Author> query = _dbContext.Authors;
 
-            if (!string.IsNullOrEmpty(field) && !string.IsNullOrEmpty(sort))
+            if (!string.IsNullOrEmpty(field))
             {
-                query = query.OrderByProperty(field, sort.ToLower() == "desc");
+                if (!string.IsNullOrEmpty(sort))
+                {
+                    query = query.OrderByProperty(field, sort.ToLower() == "desc");
+                }
+
+                if (!string.IsNullOrEmpty(search))
+                {
+                    query = query.SearchByProperty(field, search);
+                }
             }
 
             return query.ToList();

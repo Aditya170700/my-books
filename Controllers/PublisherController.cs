@@ -31,10 +31,11 @@ namespace MyBooks.Controllers
         [HttpGet]
         public IActionResult GetPublishers(
             [FromQuery] string field,
-            [FromQuery] string sort
+            [FromQuery] string sort,
+            [FromQuery] string search
         )
         {
-            return Ok(_publisherService.GetPublishers(field, sort));
+            return Ok(_publisherService.GetPublishers(field, sort, search));
         }
 
         [HttpGet("{Id}")]

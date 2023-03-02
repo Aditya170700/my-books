@@ -29,13 +29,21 @@ namespace MyBooks.Data.Services
             return _publisher;
         }
 
-        public List<Publisher> GetPublishers(string field, string sort)
+        public List<Publisher> GetPublishers(string field, string sort, string search)
         {
             IQueryable<Publisher> query = _dbContext.Publishers;
 
-            if (!string.IsNullOrEmpty(field) && !string.IsNullOrEmpty(sort))
+            if (!string.IsNullOrEmpty(field))
             {
-                query = query.OrderByProperty(field, sort.ToLower() == "desc");
+                if (!string.IsNullOrEmpty(sort))
+                {
+                    query = query.OrderByProperty(field, sort.ToLower() == "desc");
+                }
+
+                if (!string.IsNullOrEmpty(search))
+                {
+                    query = query.SearchByProperty(field, search);
+                }
             }
 
             return query.ToList();

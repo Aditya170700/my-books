@@ -59,13 +59,21 @@ namespace MyBooks.Data.Services
             }
         }
 
-        public List<Book> GetBooks(string field, string sort)
+        public List<Book> GetBooks(string field, string sort, string search)
         {
             IQueryable<Book> query = _dbContext.Books;
 
-            if (!string.IsNullOrEmpty(field) && !string.IsNullOrEmpty(sort))
+            if (!string.IsNullOrEmpty(field))
             {
-                query = query.OrderByProperty(field, sort.ToLower() == "desc");
+                if (!string.IsNullOrEmpty(sort))
+                {
+                    query = query.OrderByProperty(field, sort.ToLower() == "desc");
+                }
+                
+                if (!string.IsNullOrEmpty(search))
+                {
+                    query = query.SearchByProperty(field, search);
+                }
             }
 
             return query.ToList();
