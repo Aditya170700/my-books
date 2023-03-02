@@ -3,7 +3,7 @@ using System.Threading;
 using MyBooks.Data.Models;
 using MyBooks.Data.Queries;
 using MyBooks.Data.Views;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace MyBooks.Data.Services
 {
@@ -59,9 +59,9 @@ namespace MyBooks.Data.Services
             }
         }
 
-        public List<Book> GetBooks(string field, string sort, string search)
+        public PaginatedViews<Book> GetBooks(string field, string sort, string search, int pageNumber, int pageSize)
         {
-            IQueryable<Book> query = _dbContext.Books;
+            IQueryable<Book> query = _dbContext.Books.AsQueryable();
 
             if (!string.IsNullOrEmpty(field))
             {
@@ -69,14 +69,16 @@ namespace MyBooks.Data.Services
                 {
                     query = query.OrderByProperty(field, sort.ToLower() == "desc");
                 }
-                
+
                 if (!string.IsNullOrEmpty(search))
                 {
                     query = query.SearchByProperty(field, search);
                 }
             }
 
-            return query.ToList();
+            PaginatedViews<Book> results = query.Paginate(pageNumber, pageSize);
+
+            return results;
         }
 
         public BookPublisherAuthorsViews GetBookById(int Id)

@@ -32,10 +32,12 @@ namespace MyBooks.Controllers
         public IActionResult GetPublishers(
             [FromQuery] string field,
             [FromQuery] string sort,
-            [FromQuery] string search
+            [FromQuery] string search,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10
         )
         {
-            return Ok(_publisherService.GetPublishers(field, sort, search));
+            return Ok(_publisherService.GetPublishers(field, sort, search, pageNumber, pageSize));
         }
 
         [HttpGet("{Id}")]

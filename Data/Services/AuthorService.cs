@@ -25,9 +25,9 @@ namespace MyBooks.Data.Services
             _dbContext.SaveChanges();
         }
 
-        public List<Author> GetAuthors(string field, string sort, string search)
+        public PaginatedViews<Author> GetAuthors(string field, string sort, string search, int pageNumber, int pageSize)
         {
-            IQueryable<Author> query = _dbContext.Authors;
+            IQueryable<Author> query = _dbContext.Authors.AsQueryable();
 
             if (!string.IsNullOrEmpty(field))
             {
@@ -42,7 +42,9 @@ namespace MyBooks.Data.Services
                 }
             }
 
-            return query.ToList();
+            PaginatedViews<Author> results = query.Paginate(pageNumber, pageSize);
+
+            return results;
         }
 
         public AuthorBooksViews GetAuthorById(int Id)

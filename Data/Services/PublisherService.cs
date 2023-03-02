@@ -29,7 +29,7 @@ namespace MyBooks.Data.Services
             return _publisher;
         }
 
-        public List<Publisher> GetPublishers(string field, string sort, string search)
+        public PaginatedViews<Publisher> GetPublishers(string field, string sort, string search, int pageNumber, int pageSize)
         {
             IQueryable<Publisher> query = _dbContext.Publishers;
 
@@ -46,7 +46,9 @@ namespace MyBooks.Data.Services
                 }
             }
 
-            return query.ToList();
+            PaginatedViews<Publisher> results = query.Paginate(pageNumber, pageSize);
+
+            return results;
         }
 
         public PublisherBookAuthorsViews GetPublisherById(int Id)

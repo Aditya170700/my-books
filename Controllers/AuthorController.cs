@@ -31,10 +31,12 @@ namespace MyBooks.Controllers
         public IActionResult GetAuthors(
             [FromQuery] string field,
             [FromQuery] string sort,
-            [FromQuery] string search
+            [FromQuery] string search,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10
         )
         {
-            return Ok(_authorService.GetAuthors(field, sort, search));
+            return Ok(_authorService.GetAuthors(field, sort, search, pageNumber, pageSize));
         }
 
         [HttpGet("{Id}")]
